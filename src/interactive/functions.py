@@ -7,7 +7,7 @@ import src.models.models as models
 from src.evaluate.sampler import BeamSampler, GreedySampler, TopKSampler
 
 import utils.utils as utils
-
+import numpy as np
 
 def load_model_file(model_file):
     model_stuff = data.load_checkpoint(model_file)
@@ -88,12 +88,12 @@ def set_sampler(opt, sampling_algorithm, data_loader):
     return sampler
 
 
-def get_atomic_sequence(input_event, model, sampler, data_loader, text_encoder, category):
+def get_atomic_sequence(input_events, model, sampler, data_loader, text_encoder, category):
     if isinstance(category, list):
         outputs = {}
         for cat in category:
             new_outputs = get_atomic_sequence(
-                input_event, model, sampler, data_loader, text_encoder, cat)
+                input_events, model, sampler, data_loader, text_encoder, cat)
             outputs.update(new_outputs)
         return outputs
     elif category == "all":
@@ -101,30 +101,27 @@ def get_atomic_sequence(input_event, model, sampler, data_loader, text_encoder, 
 
         for category in data_loader.categories:
             new_outputs = get_atomic_sequence(
-                input_event, model, sampler, data_loader, text_encoder, category)
+                input_events, model, sampler, data_loader, text_encoder, category)
             outputs.update(new_outputs)
         return outputs
     else:
-
+        
         sequence_all = {}
 
-        sequence_all["event"] = input_event
+        sequence_all["event"] = input_events
         sequence_all["effect_type"] = category
 
         with torch.no_grad():
 
             batch = set_atomic_inputs(
-                input_event, category, data_loader, text_encoder)
-
+                input_events, category, data_loader, text_encoder)
             sampling_result = sampler.generate_sequence(
                 batch, model, data_loader, data_loader.max_event +
                 data.atomic_data.num_delimiter_tokens["category"],
                 data_loader.max_effect -
                 data.atomic_data.num_delimiter_tokens["category"])
-
         sequence_all['beams'] = sampling_result["beams"]
 
-        print_atomic_sequence(sequence_all)
 
         return {category: sequence_all}
 
@@ -143,20 +140,23 @@ def print_atomic_sequence(sequence_object):
     print("====================================================")
     print("")
 
-
-def set_atomic_inputs(input_event, category, data_loader, text_encoder):
+   
+           
+def set_atomic_inputs(input_events, category, data_loader, text_encoder):
+    #max_event = max([len(event) for event in input_events])
     XMB = torch.zeros(1, data_loader.max_event + 1).long().to(cfg.device)
-    prefix, suffix = data.atomic_data.do_example(text_encoder, input_event, None, True, None)
-
-    XMB[:, :len(prefix)] = torch.LongTensor(prefix)
+    
+    #XMB = torch.zeros(1, len(input_events) + 1).long().to(cfg.device)
+    prefix, _ = data.atomic_data.do_example(text_encoder, input_events, None, True, None)
+    length = min(len(prefix),data_loader.max_event)
+    XMB[:, :length] = torch.LongTensor(prefix[:length])
     XMB[:, -1] = torch.LongTensor([text_encoder.encoder["<{}>".format(category)]])
-
+        
     batch = {}
     batch["sequences"] = XMB
     batch["attention_mask"] = data.atomic_data.make_attention_mask(XMB)
 
     return batch
-
 
 def get_conceptnet_sequence(e1, model, sampler, data_loader, text_encoder, relation, force=False):
     if isinstance(relation, list):

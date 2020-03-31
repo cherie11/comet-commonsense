@@ -1,5 +1,7 @@
 import os
 import src.data.atomic as atomic_data
+import src.data.persona as persona_data
+
 import src.data.conceptnet as conceptnet_data
 import src.data.config as cfg
 
@@ -70,8 +72,10 @@ def load_checkpoint(filename, gpu=True):
 def make_data_loader(opt, *args):
     if opt.dataset == "atomic":
         return atomic_data.GenerationDataLoader(opt, *args)
+        #return persona_data.GenerationDataLoader(opt, *args)
     elif opt.dataset == "conceptnet":
         return conceptnet_data.GenerationDataLoader(opt, *args)
+    
 
 
 def set_max_sizes(data_loader, force_split=None):

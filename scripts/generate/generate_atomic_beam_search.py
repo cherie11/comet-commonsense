@@ -67,8 +67,10 @@ print("Loading Data")
 
 categories = opt.data.categories
 
-path = "data/atomic/processed/generation/{}.pickle".format(
-    utils.make_name_string(opt.data))
+
+opt.data='categories_oEffect#oReact#oWant#xAttr#xEffect#xIntent#xNeed#xReact#xWant-maxe1_17-maxe2_35-maxr_1'
+
+path = "data/atomic/processed/generation/{}.pickle".format(opt.data)
 data_loader = data.make_data_loader(opt, categories)
 loaded = data_loader.load_data(path)
 
@@ -148,6 +150,7 @@ data_loader.reset_offsets(splits=split, shuffle=False)
 # Generate for all sequences
 if args.generation_set_size == "full":
     b = [tuple(j) for j in data_loader.sequences[split]['total'][:, :data_loader.max_event + 1].tolist()]
+
     total = []
     set_total = set()
     for i, sequence in enumerate(b):
@@ -191,14 +194,15 @@ with torch.no_grad():
         XMB = batch["sequences"][:, :context_size_event + 1]
         Ref = batch["sequences"][:, context_size_event + 1:]
         MMB = batch["attention_mask"][:, :context_size_event + 1]
-
+        print(XMB.size())
         init = "".join([text_encoder.decoder[i].replace('</w>', ' ').replace(
                 "<blank>", "___ ") for i in XMB[:, :-1].squeeze().tolist() if i])
         attr = text_encoder.decoder[XMB[:, -1].item()].strip("<>")
 
         XMB = model_utils.prepare_position_embeddings(
             opt, text_encoder.encoder, XMB.unsqueeze(-1))
-
+        print(XMB.size())
+        input()
         sequence_all["event"] = init
         sequence_all["effect_type"] = attr
 
@@ -219,6 +223,8 @@ with torch.no_grad():
         XMB = XMB.repeat(args.beam, 1, 1)
         MMB = MMB.repeat(args.beam, 1)
         next_pos = XMB[:, -1:, 1] + 1
+        print(beam_toks.size(), next_pos.size())
+        input()
         next_x = torch.cat((beam_toks, next_pos), -1).unsqueeze(1)
         XMB = torch.cat((XMB, next_x), 1)
         MMB = torch.cat([MMB, torch.ones(XMB.size(0), 1, device=MMB.device)], 1)

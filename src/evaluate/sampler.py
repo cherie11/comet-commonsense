@@ -212,7 +212,8 @@ class BeamSampler(TopKSampler):
 
         XMB = model_utils.prepare_position_embeddings(
             self.opt, data_loader.vocab_encoder, XMB.unsqueeze(-1))
-
+        
+        
         tokens = []
         beam_losses = []
         # Beam Search

@@ -89,12 +89,12 @@ class GenerationDataLoader(DataLoader):
             df = pandas.read_csv("{}/{}".format(path, file_name), index_col=0)
             df.iloc[:, :9] = df.iloc[:, :9].apply(
                 lambda col: col.apply(json.loads))
-
+            
             for cat in self.categories:
                 attr = df[cat]
                 self.data[split]["total"] += utils.zipped_flatten(zip(
                     attr.index, ["<{}>".format(cat)] * len(attr), attr.values))
-
+            
         if do_take_partial_dataset(self.opt.data):
             self.data["train"]["total"] = select_partial_dataset(
                 self.opt.data, self.data["train"]["total"])
@@ -311,8 +311,29 @@ def do_example(text_encoder, prefix, suffix, do_prefix, do_suffix):
             final_suffix = handle_underscores(suffix, text_encoder)
         else:
             final_suffix = text_encoder.encode([suffix], verbose=False)[0]
-
     return final_prefix, final_suffix
+
+
+def do_example_batch(text_encoder, prefixs, suffix, do_prefix, do_suffix):
+    sequences = []
+    count = 0
+
+    final_prefix = None
+    final_suffix = None
+
+    for prefix in tqdm(prefixs):
+        final_prefix, final_suffix = do_example(
+            text_encoder, prefix, None, True,None)
+        
+        #final = compile_final_sequence(
+        #    opt, final_prefix, final_suffix, category, text_encoder)
+
+        sequences.append(final_prefix)
+
+
+        
+
+    return sequences
 
 
 def compile_final_sequence(opt, final_prefix, final_suffix, category, text_encoder):

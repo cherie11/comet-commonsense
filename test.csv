@@ -1,0 +1,29 @@
+utterance,xEffect,xIntent,xReact,xNeed,xWant,dialog_id,idx
+your persona: i love to meet new people.,,,,,,0,-1
+your persona: i have a turtle named timothy.,,,,,,0,-1
+your persona: my favorite sport is ultimate frisbee.,,,,,,0,-1
+your persona: my parents are living in bora bora.,,,,,,0,-1
+your persona: autumn is my favorite season.,,,,,,0,-1
+partner's persona: i just bought a brand new house.,,,,,,0,-1
+partner's persona: i like to dance at the club.,,,,,,0,-1
+partner's persona: i run a dog obedience school.,,,,,,0,-1
+partner's persona: i have a big sweet tooth.,,,,,,0,-1
+partner's persona: i like taking and posting selkies.,,,,,,0,-1
+"hello , how are you doing tonight ?",is asked questions,to have fun,happy,to have a job,to go to bed,0,0
+i am well an loving this interaction how are you ?,gets kissed,to be happy,happy,to meet someone,to have a relationship,0,0
+i am great . i just got back from the club .,smiles,to be home,happy,to go to the club,to go home,0,1
+this is my favorite time of the year season wise,gets a lot of attention,to enjoy the season,happy,to have a good time,to enjoy the season,0,1
+i would rather eat chocolate cake during this season .,gets diabetes,to be healthy,happy,to be hungry,to eat something else,0,2
+what club did you go to ? me an timothy watched tv,personx gets bored,to be entertained,happy,to turn on the tv,to be entertained,0,2
+i went to club chino . what show are you watching ?,personx gets drunk,to have fun,happy,to go to the club,to have fun,0,3
+lol oh okay kind of random,gets yelled at,to be nice,happy,to be with someone,to not get in trouble,0,3
+do you live in a house or apartment ?,personx has a place to live,to have a place to live,comfortable,to buy a home,to move out of the apartment,0,4
+we watched a show about animals like him,learns about animals,to be entertained,interested,to find a show,to learn more about animals,0,4
+i love those shows . i am really craving cake .,eats cake,to eat something sweet,happy,to buy cake,to eat cake,0,5
+why does that matter any ? i went outdoors to play frisbee,gets exercise,to have fun,happy,to get a frisbee,to have fun,0,5
+it matters because i have a sweet tooth .,eats sweets,to eat sweets,happy,to eat sweets,to eat sweets,0,6
+so ? lol i want to meet my family at home in bora,personx is asked to come over,to see family,happy,to get in the car,to go to dinner,0,6
+my family lives in alaska . it is freezing down there .,shivers,to have fun,cold,to get a coat,to get a blanket,0,7
+i bet it is oh i could not,wins the game,to win the game,happy,to have a bet,to win the game,0,7
+your persona: i drive a ford pickup truck.,,,,,,1,-1
+your persona: i am very conservative.,,,,,,1,-1
